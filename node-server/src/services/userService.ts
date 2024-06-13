@@ -4,17 +4,23 @@ import { Request} from 'express';
 import { UserModel } from '../models/userModel';
 import config from '../config/config';
 
-export const signUp = async (req: Request) => {
-        const { username, email, password, role } = req.body;
-        if (!username || !email || !password || !role) {
-            throw new Error('Missing required fields');
-        }
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new UserModel({ username, email, password: hashedPassword, role });
-        await newUser.save();
-        return newUser;
-};
+import { validateEmail } from '../utils/emailValidator'; // Import the email validation function
 
+export const signUp = async (req: Request) => {
+    const { username, email, password, role } = req.body;
+    if (!username || !email || !password || !role) {
+        throw new Error('Missing required fields');
+    }
+    // Validate the email before proceeding
+    const isEmailValid = await validateEmail(email);
+    if (!isEmailValid) {
+        throw new Error('Invalid email address');
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new UserModel({ username, email, password: hashedPassword, role });
+    await newUser.save();
+    return newUser;
+};
 export const signIn = async (req: Request) => {
     try {
         const { email, password } = req.body;
