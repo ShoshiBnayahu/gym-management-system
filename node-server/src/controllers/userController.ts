@@ -1,33 +1,55 @@
 import { Response, Request } from 'express';
 import { signIn, signUp } from '../services/userService';
+import { Error } from 'mongoose';
 
 
 export const post_signup = async (req: Request, res: Response) => {
     try {
         const result = await signUp(req);
         console.log(result);
-        return res.status(201).send(result);
-    } catch (error:unknown) {
-        if (error.name === 'MongoServerError' && error.code === 11000) {
-            return res.status(409).json({ message: 'Duplicate key error - UserEmail already exists' });
-        } else {
-            console.error('Error signing up:', error);
-            return res.status(500).json({ message: 'Internal server error' });
+        return res.status(201).send('User signed up successfully');
+    } catch (error) {
+        let status = 500;
+        let message = '';
+        if (error instanceof Error) {
+            if (error.message === 'Missing required fields') {
+                message = 'Missing required fields';
+                status = 400;
+            }
+            if (error.message === 'Invalid email address') {
+                message = 'Invalid email address';
+                status = 422;
+            }
+            if (error.message === 'Failed to save user') {
+                message = 'Failed to save user';
+                status = 500;
+            }
         }
+        console.error('Error during signup:', message);
+        return res.status(status).json({ message: 'An error occurred during signup'+message });
     }
 };
 
 export const post_signin = async (req: Request, res: Response) => {
     try {
-        const result = await signIn(req);
-        res.status(200).json(result);
-    } catch (error: unknown) {
-        if (error instanceof Error && error.message && (error.message === 'User not found' || error.message === 'Invalid credentials')) {
-            res.status(401).json({ error: error.message });
-        } else {
-            console.error('Error signing in:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
+        const { user, token } = await signIn(req);
+        console.log(user, token);
+        return res.status(201).json({ message: 'User signed in successfully', user: user, token: token });
+    } catch (error) {
+        let status = 500;
+        let message = '';
+        if (error instanceof Error) {
+            if (error.message === 'User not found') {
+                message = 'User not found';
+                status = 404;
+            }
+            if (error.message === 'Invalid credentials') {
+                message = 'Invalid credentials';
+                status = 401;
+            }
         }
+        console.error('Error during signin:', message);
+        return res.status(status).json({ message: 'An error occurred during signin'+message });
     }
 };
 
