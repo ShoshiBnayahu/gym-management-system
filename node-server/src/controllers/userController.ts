@@ -1,7 +1,5 @@
 import { Response, Request } from 'express';
 import { signIn, signUp } from '../services/userService';
-import { Error } from 'mongoose';
-
 
 export const post_signup = async (req: Request, res: Response) => {
     try {
@@ -26,15 +24,14 @@ export const post_signup = async (req: Request, res: Response) => {
             }
         }
         console.error('Error during signup:', message);
-        return res.status(status).json({ message: 'An error occurred during signup'+message });
+        return res.status(status).json({ message: 'An error occurred during signup  '+message });
     }
 };
 
 export const post_signin = async (req: Request, res: Response) => {
     try {
-        const { user, token } = await signIn(req);
-        console.log(user, token);
-        return res.status(201).json({ message: 'User signed in successfully', user: user, token: token });
+        const  x = await signIn(req);
+        return res.status(201).json({ message: 'User signed in successfully', user: x, token: x });
     } catch (error) {
         let status = 500;
         let message = '';
