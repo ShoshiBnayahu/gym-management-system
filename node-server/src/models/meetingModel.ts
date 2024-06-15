@@ -1,5 +1,6 @@
 import { Schema, model, Document, Types } from 'mongoose';
 
+
 interface IMeeting extends Document {
     userId: number;
     details: string;
