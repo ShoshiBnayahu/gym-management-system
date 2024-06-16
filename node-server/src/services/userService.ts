@@ -30,7 +30,6 @@ export const signUp = async (req: Request) => {
 };
 
 export const signIn = async (req: Request) => {
-    try {
         const { email, password } = req.body;
         const user = await UserModel.findOne({ email: email });
         if (!user)
@@ -40,30 +39,16 @@ export const signIn = async (req: Request) => {
             throw new CustomError('Invalid credentials', 401);
         const token = jwt.sign({ id: user._id, role: user.role }, config.jwtSecret as string, { expiresIn: '1h' });
         return { user, token };
-    } catch (error) {
-        console.error('Error signing in:', error);
-        throw error;
-    }
 };
 
 export const getUser = async (req: Request)=>{
-    try {
         const { userId } = req.params;
-        const user = await UserModel.findOne({ _id: userId });
-        if (!user)
+        const user = await UserModel.findById(userId);
+    if (!user)
             throw new CustomError('User not found', 404);
         return user;
-    } catch (error) {
-        console.error("Error fetching user:", error);
-        throw error;
-    }
 }
 export const getUsers = async () => {
-    try {
         const users = await UserModel.find();
         return users
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        throw new CustomError('Failed to fetch users',500);
-    }
   };

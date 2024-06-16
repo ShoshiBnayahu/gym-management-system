@@ -64,7 +64,7 @@ router.post('/signin', post_signin);
  *       '500':
  *         description: An error occurred while fetching users
  */
-router.get('/users', get_users);
+router.get('/', get_users);
 
 /**
  * @swagger
@@ -92,6 +92,6 @@ router.get('/users', get_users);
  *       '500':
  *         description: An error occurred while fetching the user
  */
-router.get('/users/:id', get_user);
+router.get('/:userId', get_user);
 
 export default router;
