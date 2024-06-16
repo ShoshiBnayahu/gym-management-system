@@ -9,10 +9,10 @@ import { CustomError } from '../types/customError';
 export const signUp = async (req: Request) => {
     const { username, email, password, role } = req.body;
     if (!username || !email || !password || !role)
-        throw new CustomError('Missing required fields',400);
+        throw new CustomError('Missing required fields', 400);
     const isEmailValid = await validateEmail(email);
     if (!isEmailValid)
-        throw new CustomError('Invalid email address',422);
+        throw new CustomError('Invalid email address', 422);
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new UserModel({
         username: username,
@@ -24,7 +24,7 @@ export const signUp = async (req: Request) => {
         await newUser.save();
     } catch (error) {
         console.error('Error saving user:', error);
-        throw new CustomError('Failed to save user',500);
+        throw new CustomError('Failed to save user', 500);
     }
     return newUser;
 };
@@ -32,12 +32,12 @@ export const signUp = async (req: Request) => {
 export const signIn = async (req: Request) => {
     try {
         const { email, password } = req.body;
-        const user = await UserModel.findOne({ email: email });       
+        const user = await UserModel.findOne({ email: email });
         if (!user)
-            throw new CustomError('User not found',404);
+            throw new CustomError('User not found', 404);
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch)
-            throw new CustomError('Invalid credentials',401);
+            throw new CustomError('Invalid credentials', 401);
         const token = jwt.sign({ id: user._id, role: user.role }, config.jwtSecret as string, { expiresIn: '1h' });
         return { user, token };
     } catch (error) {
@@ -45,3 +45,25 @@ export const signIn = async (req: Request) => {
         throw error;
     }
 };
+
+export const getUser = async (req: Request)=>{
+    try {
+        const { userId } = req.params;
+        const user = await UserModel.findOne({ _id: userId });
+        if (!user)
+            throw new CustomError('User not found', 404);
+        return user;
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        throw error;
+    }
+}
+export const getUsers = async () => {
+    try {
+        const users = await UserModel.find();
+        return users
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        throw new CustomError('Failed to fetch users',500);
+    }
+  };
