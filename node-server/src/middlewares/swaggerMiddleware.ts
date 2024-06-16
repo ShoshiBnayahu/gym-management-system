@@ -1,4 +1,3 @@
-
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { Express } from 'express';
@@ -14,7 +13,7 @@ const options = {
     components: {
       schemas: {
         User: {
-          type: 'string',
+          type: 'object',
           properties: {
             username: { type: 'string' },
             email: { type: 'string', format: 'email' },
