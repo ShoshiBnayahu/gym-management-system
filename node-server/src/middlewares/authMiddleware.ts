@@ -1,12 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { IUser } from '../models/userModel';
 import config from '../config/config';
+import {AuthenticatedRequest} from '../types/customRequest'
 
-
-interface AuthenticatedRequest extends Request {
-  user?: IUser;  
-}
 
 export const loggedIn = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
   let token = req.header('Authorization');
