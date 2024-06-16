@@ -6,6 +6,7 @@ import userRoutes from './routes/userRoute';
 import serviceRoutes from './routes/serviceRoute';
 
 import swaggerMiddleware from './middlewares/swaggerMiddleware'; 
+import { loggedIn } from './middlewares/authMiddleware';
 
 const app = express();
 const port = config.server.port;
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 swaggerMiddleware(app);
 app.use('/users', userRoutes);
+app.use(loggedIn);
 app.use('/services', serviceRoutes);
 
 app.listen(port, () => {
