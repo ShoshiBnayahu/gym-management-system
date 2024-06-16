@@ -1,6 +1,10 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { Express } from 'express';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const schemas = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../schemas.json'), 'utf8'));
 
 const options = {
   definition: {
@@ -11,24 +15,10 @@ const options = {
       description: 'API documentation using Swagger',
     },
     components: {
-      schemas: {
-        User: {
-          type: 'object',
-          properties: {
-            username: { type: 'string' },
-            email: { type: 'string', format: 'email' },
-            password: { type: 'string' },
-            role: {
-              type: 'string',
-              enum: ['admin', 'user'],
-            },
-          },
-          required: ['username', 'email', 'password', 'role'],
-        },
-      },
+      schemas, 
     },
   },
-  apis: ['./routes/*.ts'],
+  apis: ['./routers/*.ts'],
 };
 
 const specs = swaggerJSDoc(options);
