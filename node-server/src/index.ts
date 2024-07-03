@@ -9,7 +9,7 @@ import businessRoutes from './routes/businessRoute'
 import meetingRoutes from './routes/meetingRoute'
 import swaggerMiddleware from './middlewares/swaggerMiddleware'; 
 import { loggedIn } from './middlewares/authMiddleware';
-
+import {logMiddleware} from './middlewares/logMiddleware'
 const app = express();
 const port = config.server.port;
 
@@ -21,11 +21,11 @@ app.use(express.urlencoded({ extended: true }));
 swaggerMiddleware(app);
 app.use('/', authRotes);
 app.use(loggedIn);
+app.use(logMiddleware);
 app.use('/users', userRoutes);
 app.use('/services', serviceRoutes);
 app.use('/business', businessRoutes);
 app.use('/meetings', meetingRoutes);
-
 
 app.listen(port, () => {
   console.log(` app listening on port ${port}`);

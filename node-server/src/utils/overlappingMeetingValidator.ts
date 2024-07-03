@@ -21,8 +21,6 @@ export const checkOverlap = async (dateTime: Date, duration: number, id: Types.O
         ],
         _id: { $ne: id }
     });
-    console.log("overlappingMeeting:");
-    console.log(overlappingMeeting);
-    
+
     return !!overlappingMeeting;
 };
