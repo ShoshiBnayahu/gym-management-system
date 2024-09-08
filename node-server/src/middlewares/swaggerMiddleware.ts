@@ -4,27 +4,31 @@ import { Express } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const schemas = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../schemas.json'), 'utf8'));
+const swaggerConfigPath = path.resolve(__dirname, '../config/swagger-config.json');
+const swaggerConfig = JSON.parse(fs.readFileSync(swaggerConfigPath, 'utf8'));
 
 const options = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'gym-management-system',
-      version: '1.0.0',
-      description: 'API documentation using Swagger',
-    },
-    components: {
-      schemas, 
-    },
-  },
-  apis: ['./routers/*.ts'],
+  definition: swaggerConfig, 
+  apis: swaggerConfig.apis, 
 };
 
 const specs = swaggerJSDoc(options);
 
 const swaggerMiddleware = (app: Express) => {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+    swaggerOptions: {
+      authAction: {
+        BearerAuth: {
+          name: 'Authorization',
+          schema: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT'
+          }
+        }
+      }
+    }
+  }));
 };
 
 export default swaggerMiddleware;

@@ -1,0 +1,140 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "gym-management-system",
+    "version": "1.0.0",
+    "description": "API documentation using Swagger"
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "user"
+            ]
+          }
+        },
+        "required": [
+          "username",
+          "email",
+          "password",
+          "role"
+        ]
+      },
+      "Service": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "business": {
+            "type": "string",
+            "format": "objectId"
+          }
+        },
+        "required": [
+          "name",
+          "price",
+          "business"
+        ]
+      },
+      "Business": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string",
+            "format": "objectId"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "address",
+          "phone",
+          "userId"
+        ]
+      },
+      "Meeting": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "objectId"
+          },
+          "details": {
+            "type": "string"
+          },
+          "serviceId": {
+            "type": "string",
+            "format": "objectId"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "duration": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "userId",
+          "details",
+          "serviceId",
+          "date",
+          "startTime",
+          "duration"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+  },
+  "apis": [
+    "./src/routes/*.ts" 
+  ]
+}

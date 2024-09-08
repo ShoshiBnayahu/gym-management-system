@@ -4,55 +4,49 @@ import { adminOnly } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
-
+/**
+ * @swagger
+ * tags:
+ *   name: User
+ *   description: User operations
+ */
 
 /**
  * @swagger
- * /users:
+ * /:
  *   get:
  *     summary: Get all users
- *     description: Retrieve a list of all users
- *     tags: [Users]
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
- *       '200':
- *         description: A list of users
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/User'
- *       '500':
- *         description: An error occurred while fetching users
+ *       200:
+ *         description: List of all users
+ *       401:
+ *         description: Unauthorized
  */
-router.get('/',adminOnly, get_users);
+router.get('/', adminOnly, get_users);
 
 /**
  * @swagger
- * /users/{id}:
+ * /{userId}:
  *   get:
- *     summary: Get user by ID
- *     description: Retrieve a user by their ID
- *     tags: [Users]
+ *     summary: Get a single user by ID
+ *     tags: [User]
  *     parameters:
  *       - in: path
- *         name: id
- *         required: true
+ *         name: userId
  *         schema:
  *           type: string
+ *         required: true
  *         description: The user ID
  *     responses:
- *       '200':
- *         description: A user object
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       '404':
+ *       200:
+ *         description: User details
+ *       404:
  *         description: User not found
- *       '500':
- *         description: An error occurred while fetching the user
  */
 router.get('/:userId', get_user);
+
 
 export default router;

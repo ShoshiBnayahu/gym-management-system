@@ -1,15 +1,21 @@
 import express from 'express';
-import { post_signup, post_signin} from '../controllers/authController';
+import { post_signup, post_signin } from '../controllers/authController';
 
 const router = express.Router();
 
 /**
  * @swagger
- * /users/signup:
+ * tags:
+ *   name: Auth
+ *   description: User authentication
+ */
+
+/**
+ * @swagger
+ * /signup:
  *   post:
  *     summary: Register a new user
- *     description: Endpoint for user registration
- *     tags: [Authentication]
+ *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -17,31 +23,41 @@ const router = express.Router();
  *           schema:
  *             $ref: '#/components/schemas/User'
  *     responses:
- *       '201':
- *         description: Successfully registered
- *       '400':
+ *       200:
+ *         description: User registered successfully
+ *       400:
  *         description: Bad request
  */
 router.post('/signup', post_signup);
 
 /**
  * @swagger
- * /users/signin:
+ * /signin:
  *   post:
- *     summary: User sign-in
- *     description: Endpoint for user sign-in
- *     tags: [Authentication]
+ *     summary: Sign in an existing user
+ *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *             required:
+ *               - email
+ *               - password
  *     responses:
- *       '200':
- *         description: Successfully signed in
- *       '401':
- *         description: Unauthorized
+ *       200:
+ *         description: User signed in successfully
+ *       400:
+ *         description: Invalid credentials
  */
 router.post('/signin', post_signin);
+
+
 export default router;
